@@ -13,10 +13,13 @@ export const Main = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
+        setIsLoading(true);
         const response = await getNews();
         setNews(response.news);
       } catch (error) {
         console.log('error: ', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchNews();
