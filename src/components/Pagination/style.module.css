@@ -1,0 +1,22 @@
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border-bottom: 2px solid #f2f4f5;
+  /* margin-bottom: 25px; */
+}
+.button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #000;
+}
+.button:disabled {
+  color: grey;
+  cursor: not-allowed;
+}
+.current {
+  border: 1px solid orange;
+}
