@@ -8,6 +8,8 @@ import { Skeleton } from '../../components/Skeleton/Skeleton';
 import { Pagination } from '../../components/Pagination/Pagination';
 import { Categories } from '../../components/Category/Categories';
 import { capitalize } from '../../helpers/capitalize';
+import { Search } from '../../components/Search/Search';
+import { useDebounce } from '../../hooks/useDebounce';
 
 export const Main = () => {
   const [news, setNews] = useState([]);
@@ -18,6 +20,9 @@ export const Main = () => {
   const TOTALPAGES = 10; //Общее кол-во стр
   const PAGE_SIZE = 10; //Общее кол-во новостей в 1 стр
 
+  const [keywords, setKeywords] = useState('');
+  const debouncedKeywords = useDebounce(keywords, 1500);
+
   const fetchNews = async (currentPage, PAGE_SIZE) => {
     try {
       setIsLoading(true);
@@ -26,6 +31,7 @@ export const Main = () => {
         page_size: PAGE_SIZE,
         category: selectedCategory === 'all' ? null : selectedCategory,
         PAGE_SIZE,
+        keywords: debouncedKeywords,
       });
       setNews(response.news);
     } catch (error) {
@@ -50,7 +56,7 @@ export const Main = () => {
 
   useEffect(() => {
     fetchNews(currentPage, PAGE_SIZE);
-  }, [currentPage, selectedCategory]);
+  }, [currentPage, selectedCategory, debouncedKeywords]);
 
   const handlePreviosPage = () => {
     if (currentPage >= 1) {
@@ -71,6 +77,9 @@ export const Main = () => {
   return (
     <main className={style.main}>
       <ThemeButton />
+
+      <Search keywords={keywords} setKeywords={setKeywords} />
+
       <Categories
         categories={categories}
         selectedCategory={selectedCategory}
