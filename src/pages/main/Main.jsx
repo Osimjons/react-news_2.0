@@ -17,7 +17,6 @@ export const Main = () => {
     categories: null,
     keywords: '',
   });
-
   const debouncedKeywords = useDebounce(filters.keywords, 1500);
 
   const [data, isLoading] = useFetch(getNews, {
@@ -56,9 +55,9 @@ export const Main = () => {
         <Categories
           categories={dataCategory.categories}
           selectedCategory={filters.categories}
-          setSelectedCategory={(categories) =>
-            chengeFilter('categories', categories)
-          }
+          setSelectedCategory={(categories) => {
+            chengeFilter('categories', categories);
+          }}
         />
       )}
 
