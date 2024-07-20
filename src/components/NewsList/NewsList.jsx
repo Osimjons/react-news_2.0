@@ -1,3 +1,4 @@
+import { withSkeleton } from '../../hocs/withSkeleton';
 import { NewsItem } from '../NewsItem/NewsItem';
 import style from './style.module.css';
 
@@ -8,3 +9,4 @@ export const NewList = ({ news }) => {
     </ul>
   );
 };
+export const NewListWithSkeleton = withSkeleton(NewList, 'item', 10);

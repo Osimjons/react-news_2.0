@@ -1,115 +1,86 @@
-import { useEffect, useState } from 'react';
 import { getCategories, getNews } from '../../API/apiNews';
-import { NewsBunner } from '../../components/NewsBunner/NewsBunner';
-import { NewList } from '../../components/NewsList/NewsList';
-import style from './style.module.css';
-import ThemeButton from '../../context/ThemChenger/ThemeChanger';
-import { Skeleton } from '../../components/Skeleton/Skeleton';
-import { Pagination } from '../../components/Pagination/Pagination';
 import { Categories } from '../../components/Category/Categories';
-import { capitalize } from '../../helpers/capitalize';
+import { NewsBunnerWithSkeleton } from '../../components/NewsBunner/NewsBunner';
+import { NewListWithSkeleton } from '../../components/NewsList/NewsList';
+import { Pagination } from '../../components/Pagination/Pagination';
 import { Search } from '../../components/Search/Search';
+import { PAGE_SIZE, TOTALPAGES } from '../../constatnts/constatnts';
+import ThemeButton from '../../context/ThemChenger/ThemeChanger';
 import { useDebounce } from '../../hooks/useDebounce';
-
+import { useFetch } from '../../hooks/useFetch';
+import { useFilters } from '../../hooks/useFilters';
+import style from './style.module.css';
 export const Main = () => {
-  const [news, setNews] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const TOTALPAGES = 10; //Общее кол-во стр
-  const PAGE_SIZE = 10; //Общее кол-во новостей в 1 стр
+  const { filters, chengeFilter } = useFilters({
+    page_number: 1,
+    page_size: PAGE_SIZE,
+    categories: null,
+    keywords: '',
+  });
 
-  const [keywords, setKeywords] = useState('');
-  const debouncedKeywords = useDebounce(keywords, 1500);
+  const debouncedKeywords = useDebounce(filters.keywords, 1500);
 
-  const fetchNews = async (currentPage, PAGE_SIZE) => {
-    try {
-      setIsLoading(true);
-      const response = await getNews({
-        page_number: currentPage,
-        page_size: PAGE_SIZE,
-        category: selectedCategory === 'all' ? null : selectedCategory,
-        PAGE_SIZE,
-        keywords: debouncedKeywords,
-      });
-      setNews(response.news);
-    } catch (error) {
-      console.log('error: ', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [data, isLoading] = useFetch(getNews, {
+    ...filters,
+    keywords: debouncedKeywords,
+  });
 
-  const fetchCategories = async () => {
-    try {
-      const response = await getCategories();
-      setCategories(capitalize(['all', ...response.categories]));
-    } catch (error) {
-      console.log('error: ', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    fetchNews(currentPage, PAGE_SIZE);
-  }, [currentPage, selectedCategory, debouncedKeywords]);
+  const [dataCategory] = useFetch(getCategories);
 
   const handlePreviosPage = () => {
-    if (currentPage >= 1) {
-      setCurrentPage((prev) => prev - 1);
+    if (filters.page_number >= 1) {
+      chengeFilter('page_number', filters.page_number - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage < TOTALPAGES) {
-      setCurrentPage((prev) => prev + 1);
+    if (filters.currentPage < TOTALPAGES) {
+      chengeFilter('page_number', filters.page_number + 1);
     }
   };
 
-  const handlePageClick = (currentPage) => {
-    setCurrentPage(currentPage);
+  const handlePageClick = (page_number) => {
+    chengeFilter('page_number', page_number);
   };
 
   return (
     <main className={style.main}>
       <ThemeButton />
 
-      <Search keywords={keywords} setKeywords={setKeywords} />
-
-      <Categories
-        categories={categories}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
+      <Search
+        keywords={filters.keywords}
+        setKeywords={(keywords) => chengeFilter('keywords', keywords)}
       />
 
-      {news.length > 0 && !isLoading ? (
-        <NewsBunner item={news[0]} />
-      ) : (
-        <Skeleton count={1} type="banner" />
+      {dataCategory && (
+        <Categories
+          categories={dataCategory.categories}
+          selectedCategory={filters.categories}
+          setSelectedCategory={(categories) =>
+            chengeFilter('categories', categories)
+          }
+        />
       )}
+
+      <NewsBunnerWithSkeleton
+        item={data && data.news && data.news[0]}
+        isLoading={isLoading}
+      />
 
       <Pagination
         handlePreviosPage={handlePreviosPage}
         handleNextPage={handleNextPage}
         handlePageClick={handlePageClick}
-        currentPage={currentPage}
+        currentPage={filters.page_number}
         totalPages={TOTALPAGES}
       />
+      <NewListWithSkeleton news={data && data.news} isLoading={isLoading} />
 
-      {news.length > 0 && !isLoading ? (
-        <NewList news={news} />
-      ) : (
-        <Skeleton count={10} type="item" />
-      )}
       <Pagination
         handlePreviosPage={handlePreviosPage}
         handleNextPage={handleNextPage}
         handlePageClick={handlePageClick}
-        currentPage={currentPage}
+        currentPage={filters.page_number}
         totalPages={TOTALPAGES}
       />
     </main>
