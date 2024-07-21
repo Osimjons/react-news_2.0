@@ -33,7 +33,7 @@ export const Main = () => {
   };
 
   const handleNextPage = () => {
-    if (filters.currentPage < TOTALPAGES) {
+    if (filters.page_number < TOTALPAGES) {
       chengeFilter('page_number', filters.page_number + 1);
     }
   };
