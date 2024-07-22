@@ -1,29 +1,30 @@
-.header {
+.wrapper {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   padding-block: 12px;
-  border-bottom: 2px solid #f2f4f5;
+  /* border-bottom: 2px solid #f2f4f5; */
   /* margin-bottom: 25px; */
 }
-.button {
+.button,
+.active {
   padding: 5px 10px;
   font-size: 14px;
   cursor: pointer;
   color: #000;
-}
-.button:disabled {
-  /* color: grey; */
-  cursor: not-allowed;
-}
-.current {
   border: none;
-  padding: 8px 13px;
+  background-color: #f2f4f5;
   border-radius: 5px;
-  background-color: #e7e7ff;
+}
+
+.active {
   color: #6b4eff;
   font-weight: 600;
-  scale: 1.1;
+  scale: 1.15;
+}
+.active,
+.button:disabled {
+  cursor: default;
 }

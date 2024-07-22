@@ -1,3 +1,4 @@
+import { Button } from '../Button/Button';
 import style from './style.module.css';
 
 export const Categories = ({
@@ -7,24 +8,24 @@ export const Categories = ({
 }) => {
   return (
     <div className={style.categories}>
-      <button
-        className={!selectedCategory ? style.active : style.item}
+      <Button
+        activeButton={!selectedCategory ? true : false}
         onClick={() => {
           setSelectedCategory(null);
         }}
       >
         All
-      </button>
+      </Button>
       {categories.map((category) => (
-        <button
-          className={selectedCategory === category ? style.active : style.item}
+        <Button
+          activeButton={selectedCategory === category ? true : false}
           onClick={() => {
             setSelectedCategory(category);
           }}
           key={category}
         >
           {category.charAt(0).toUpperCase() + category.slice(1)}
-        </button>
+        </Button>
       ))}
     </div>
   );

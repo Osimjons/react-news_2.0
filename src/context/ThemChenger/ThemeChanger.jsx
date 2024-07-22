@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { Button } from '../../components/Button/Button';
 
 //Создание контекста
 export const ThemeContext = createContext();
@@ -40,9 +41,13 @@ const ThemeButton = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <button onClick={toggleTheme}>
+    <Button
+      onClick={toggleTheme}
+      activeButton
+      style={{ justifyContent: 'end' }}
+    >
       Switch to {theme === 'light' ? 'dark' : 'light'} theme
-    </button>
+    </Button>
   );
 };
 

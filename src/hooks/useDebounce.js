@@ -5,6 +5,7 @@ export const useDebounce = (keywords, delay) => {
   const [debouncedKeywords, setDebouncedKeywords] = useState(keywords);
 
   useEffect(() => {
+    if (keywords === '') return;
     const timer = setTimeout(() => {
       setDebouncedKeywords(keywords);
     }, delay);

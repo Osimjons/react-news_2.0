@@ -14,7 +14,7 @@ export const Main = () => {
   const { filters, chengeFilter } = useFilters({
     page_number: 1,
     page_size: PAGE_SIZE,
-    categories: null,
+    category: null,
     keywords: '',
   });
   const debouncedKeywords = useDebounce(filters.keywords, 1500);
@@ -25,7 +25,8 @@ export const Main = () => {
   });
 
   const [dataCategory] = useFetch(getCategories);
-
+  console.log('dataCategory: ', dataCategory);
+  console.log('filters', filters.category);
   const handlePreviosPage = () => {
     if (filters.page_number >= 1) {
       chengeFilter('page_number', filters.page_number - 1);
@@ -54,9 +55,9 @@ export const Main = () => {
       {dataCategory && (
         <Categories
           categories={dataCategory.categories}
-          selectedCategory={filters.categories}
-          setSelectedCategory={(categories) => {
-            chengeFilter('categories', categories);
+          selectedCategory={filters.category}
+          setSelectedCategory={(category) => {
+            chengeFilter('category', category);
           }}
         />
       )}

@@ -1,3 +1,4 @@
+import { Button } from '../Button/Button';
 import style from './style.module.css';
 export const Pagination = ({
   handlePreviosPage,
@@ -16,20 +17,16 @@ export const Pagination = ({
         {'<'}
       </button>
       {[...Array(totalPages)].map((_, i) => (
-        <button
+        <Button
           onClick={() => {
             handlePageClick(i + 1);
           }}
           disabled={currentPage === i + 1}
-          className={
-            currentPage !== i + 1
-              ? style.button
-              : `${style.button} ${style.current}`
-          }
+          activeButton={currentPage !== i + 1 ? false : true}
           key={i}
         >
           {i + 1}
-        </button>
+        </Button>
       ))}
       <button
         disabled={currentPage >= totalPages}

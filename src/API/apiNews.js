@@ -6,7 +6,7 @@ const BASE_URL = import.meta.env.VITE_NEWS_BASE_URL;
 export const getNews = async ({
   page_number = 1,
   page_size = 10,
-  categories,
+  category,
   keywords,
 }) => {
   try {
@@ -15,7 +15,7 @@ export const getNews = async ({
         apiKey: API_KEY,
         page_number,
         page_size,
-        categories,
+        category,
         keywords,
       },
     });
